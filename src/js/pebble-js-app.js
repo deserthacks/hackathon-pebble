@@ -1,30 +1,45 @@
 var API_ROOT = 'http://api.deserthacks.org';
 var oauth = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+var timelineToken;
 
-Pebble.addEventListener('topics', function(e) {
-  // Show config page
-  Pebble.openURL('https://www.deserthacks.org/pebble');
+Pebble.addEventListener('ready', function() {
+  timelineToken = Pebble.getTimelineToken(
+    function(token) {
+      timelineToken = token;
+    },
+    function(err) {
+      console.log('Couldn\'t get token');
+    });
 });
 
-
-Pebble.addEventListener("Added", function() {
-  console.log("Adding to Timeline");
-  initialized = true;
+Pebble.addEventListener('showConfiguration', function() {
+  console.log('showing configuration');
+  Pebble.openURL('http://deserthacks.org/login?pebbleTimeline='+encodeURIComponent(JSON.stringify(timelineToken)));
 });
 
-Pebble.addEventListener("showConfiguration", function() {
-  console.log("showing configuration");
-  Pebble.openURL('http://deserthacks.org/pebble'+encodeURIComponent(JSON.stringify(options)));
+Pebble.addEventListener('webviewclosed', function(e) {
+  console.log('configuration closed');
+  var res = JSON.parse(decodeURIComponent(e.response));
+  localStorage.setItem(0, res);
 });
 
-Pebble.addEventListener("webviewclosed", function(e) {
-  console.log("configuration closed");
-  // webview closed
-  //Using primitive JSON validity and non-empty check
-  if (e.response.charAt(0) == "{" && e.response.slice(-1) == "}" && e.response.length > 5) {
-    options = JSON.parse(decodeURIComponent(e.response));
-    console.log("Options = " + JSON.stringify(options));
-  } else {
-    console.log("Cancelled");
+Pebble.addEventListener('appmessage', function(e) {
+  console.log('Received message: ' + JSON.stringify(e.payload));
+
+  if (e.payload.action) {
+    switch(e.payload.action) {
+      case 3:
+
+        break;
+      case 4:
+
+        break;
+      case 5:
+
+        break;
+      case 6:
+
+        break;
+    }
   }
 });
