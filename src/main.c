@@ -1,76 +1,101 @@
-#include <pebble.h>
+#include "pebble.h"
 
-static Window *window;
-static TextLayer *text_layer;
+#define NUM_MENU_SECTIONS 2
+#define NUM_FIRST_MENU_ITEMS 3
+#define NUM_SECOND_MENU_ITEMS 1
 
-static char text[64];
+static Window *s_main_window;
+static SimpleMenuLayer *s_simple_menu_layer;
+static SimpleMenuSection s_menu_sections[NUM_MENU_SECTIONS];
+static SimpleMenuItem s_first_menu_items[NUM_FIRST_MENU_ITEMS];
+static SimpleMenuItem s_second_menu_items[NUM_SECOND_MENU_ITEMS];
+static GBitmap *s_menu_icon_image;
 
-enum {
-  APP_KEY_READY,
-  APP_KEY_TEXT,
-  APP_KEY_ACTION,
-  APP_KEY_QUIT,
-};
+static bool s_special_flag = false;
+static int s_hit_count = 0;
 
-static void in_received_handler(DictionaryIterator *iter, void *context) {
-  Tuple *tuple;
-
-  // send the launch_arg when we receive ready from JS
-  tuple = dict_find(iter, APP_KEY_READY);
-  if (tuple) {
-    DictionaryIterator *iter;
-    app_message_outbox_begin(&iter);
-    dict_write_uint32(iter, APP_KEY_ACTION, launch_get_args());
-    dict_write_end(iter);
-    app_message_outbox_send();
-  }
-
-  // update text
-  tuple = dict_find(iter, APP_KEY_TEXT);
-  if (tuple) {
-    snprintf(text, sizeof(text), "%s", tuple->value->cstring);
-    text_layer_set_text(text_layer, text);
-  }
-
-  // quit the app
-  tuple = dict_find(iter, APP_KEY_QUIT);
-  if (tuple) {
-    window_stack_pop_all(false);
-  }
+static void menu_select_callback(int index, void *ctx) {
+  s_first_menu_items[index].subtitle = "You've hit select here!";
+  layer_mark_dirty(simple_menu_layer_get_layer(s_simple_menu_layer));
 }
 
-static void window_load(Window *window) {
+static void special_select_callback(int index, void *ctx) {
+  // Of course, you can do more complicated things in a menu item select callback
+  // Here, we have a simple toggle
+  s_special_flag = !s_special_flag;//for timeline, state if regular pebble "Have you considered upgrading to a Pebble Time?"
+
+  SimpleMenuItem *menu_item = &s_second_menu_items[index];
+
+  if (s_special_flag) {
+    menu_item->subtitle = "Why not upgrade to a Pebble Time?";
+  } else {
+    menu_item->subtitle = "Well, maybe a little.";
+  }
+
+  if (++s_hit_count > 5) {
+    menu_item->title = "Very Special Item";
+  }
+
+  layer_mark_dirty(simple_menu_layer_get_layer(s_simple_menu_layer));
+}
+
+static void main_window_load(Window *window) {
+
+  // Although we already defined NUM_FIRST_MENU_ITEMS, you can define
+  // an int as such to easily change the order of menu_item items later
+  int num_a_items = 0;
+
+  s_first_menu_items[num_a_items++] = (SimpleMenuItem) {
+    .title = "Timeline Update",
+    .subtitle = "Add event related pins",
+    .callback = menu_select_callback,
+  };
+  s_first_menu_items[num_a_items++] = (SimpleMenuItem) {
+    .title = "Final Countdown",
+    .subtitle = "Displays time remaining",
+    .callback = menu_select_callback,
+  };
+  s_first_menu_items[num_a_items++] = (SimpleMenuItem) {
+    .title = "Venue Hunt",
+    .subtitle = "Leads you to the venue",
+    .callback = menu_select_callback,
+
+  };
+
+  s_second_menu_items[0] = (SimpleMenuItem) {
+    .title = "Special Item",
+    .callback = special_select_callback,
+  };
+
+  s_menu_sections[0] = (SimpleMenuSection) {
+    .num_items = NUM_FIRST_MENU_ITEMS,
+    .items = s_first_menu_items,
+  };
+
   Layer *window_layer = window_get_root_layer(window);
+  GRect bounds = layer_get_frame(window_layer);
 
-  text_layer = text_layer_create(GRect(2, 32, 140, 120));
-  text_layer_set_text(text_layer, "Loading...");
-  text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
-  text_layer_set_background_color(text_layer, GColorClear);
-  text_layer_set_text_color(text_layer, GColorCeleste);
-  text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
-  layer_add_child(window_layer, text_layer_get_layer(text_layer));
+  s_simple_menu_layer = simple_menu_layer_create(bounds, window, s_menu_sections, NUM_MENU_SECTIONS, NULL);
+
+  layer_add_child(window_layer, simple_menu_layer_get_layer(s_simple_menu_layer));
 }
 
-static void window_unload(Window *window) {
-  text_layer_destroy(text_layer);
+void main_window_unload(Window *window) {
+  simple_menu_layer_destroy(s_simple_menu_layer);
+  gbitmap_destroy(s_menu_icon_image);
 }
 
-static void init(void) {
-  window = window_create();
-  window_set_fullscreen(window, true);
-  window_set_background_color(window, GColorCobaltBlue);
-  window_set_window_handlers(window, (WindowHandlers) {
-    .load = window_load,
-    .unload = window_unload,
+static void init() {
+  s_main_window = window_create();
+  window_set_window_handlers(s_main_window, (WindowHandlers) {
+    .load = main_window_load,
+    .unload = main_window_unload,
   });
-  window_stack_push(window, false);
-
-  app_message_register_inbox_received(in_received_handler);
-  app_message_open(256, 256);
+  window_stack_push(s_main_window, true);
 }
 
-static void deinit(void) {
-  window_destroy(window);
+static void deinit() {
+  window_destroy(s_main_window);
 }
 
 int main(void) {
