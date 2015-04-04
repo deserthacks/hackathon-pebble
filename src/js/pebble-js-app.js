@@ -42,4 +42,4 @@ Pebble.addEventListener('appmessage', function(e) {
         break;
     }
   }
-});
+}); 
