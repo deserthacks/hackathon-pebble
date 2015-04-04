@@ -7,13 +7,18 @@
   "versionLabel": "1.0",
   "sdkVersion": "3",
   "targetPlatforms": ["basalt"],
+  "capabilities": [ "configurable" ],
   "watchapp": {
     "watchface": false
   },
   "appKeys": {
     "ready": 0,
     "action": 1,
-    "quit": 2
+    "quit": 2,
+    "TOPIC_TALKS": 3,
+    "TOPIC_EVENT": 4,
+    "TOPIC_FOOD": 5,
+    "TOPIC_REMINDER": 6
   },
   "resources": {
     "media": []
