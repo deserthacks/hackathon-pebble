@@ -1,0 +1,21 @@
+{
+  "uuid": "3bcf591e-5da7-46b4-b882-11fa798919d5",
+  "shortName": "hackathon-pebble",
+  "longName": "hackathon-pebble",
+  "companyName": "hackathon",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["basalt"],
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "ready": 0,
+    "action": 1,
+    "quit": 2
+  },
+  "resources": {
+    "media": []
+  }
+}
