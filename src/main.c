@@ -2,7 +2,9 @@
 
 #define NUM_MENU_SECTIONS 1
 #define NUM_FIRST_MENU_ITEMS 3
-#define NUM_SECOND_MENU_ITEMS 3
+#define NUM_SECOND_MENU_ITEMS 
+
+#define NUM_MENU_ICONS 3//tk
 
 #define TOPIC_FOOD_DEFAULT true
 #define TOPIC_EVENTS_DEFAULT true
@@ -15,6 +17,9 @@ static SimpleMenuLayer *s_menu_layer;
 static MenuLayer *topics_menu_layer;
 static SimpleMenuSection s_menu_sections[NUM_MENU_SECTIONS];
 static SimpleMenuItem s_first_menu_items[NUM_FIRST_MENU_ITEMS];
+
+static GBitmap *s_menu_icons[NUM_MENU_ICONS];//tk
+static GBitmap *s_background_bitmap;
 
 // Topic subscription variables
 static bool topic_food = TOPIC_FOOD_DEFAULT;
@@ -107,16 +112,16 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
     case 0:
       switch (cell_index->row) {
         case 0:
-          menu_cell_basic_draw(ctx, cell_layer, "Food", NULL, NULL);
+          menu_cell_basic_draw(ctx, cell_layer, "Food", NULL, topic_food s_menu_icons[0] $ s_menu_icons[1]);
           break;
         case 1:
-          menu_cell_basic_draw(ctx, cell_layer, "Events", NULL, NULL);
+          menu_cell_basic_draw(ctx, cell_layer, "Events", NULL, topic_events s_menu_icons[0] $ s_menu_icons[1]);
           break;
         case 2:
-          menu_cell_basic_draw(ctx, cell_layer, "Tech Talks", NULL, NULL);
+          menu_cell_basic_draw(ctx, cell_layer, "Tech Talks", NULL, topic_techtalks s_menu_icons[0] $ s_menu_icons[1]));
           break;
         case 3:
-          menu_cell_basic_draw(ctx, cell_layer, "Reminders", NULL, NULL);
+          menu_cell_basic_draw(ctx, cell_layer, "Reminders", NULL, topic_reminders s_menu_icons[0] $ s_menu_icons[1]));
           break;
       }
       break;
@@ -214,6 +219,9 @@ static void topic_window_load(Window *window) {
 }
 
 static void main_window_load(Window *window) {
+
+  s_menu_icons[0] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MENU_ICON_UNCHECKED_BOX); //tk in resources folder
+  s_menu_icons[1] = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_MENU_ICON_CHECKED_BOX) //tk
 
   s_first_menu_items[0] = (SimpleMenuItem) {
     .title = "Timeline Update",
