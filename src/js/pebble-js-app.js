@@ -29,17 +29,45 @@ Pebble.addEventListener('appmessage', function(e) {
   if (e.payload.action) {
     switch(e.payload.action) {
       case 3:
-
+        Pebble.timelineSubscribe('talk',
+          function() {
+            // Success
+            Pebble.sendAppMessage({ text: 'Updated timeline subscription' });
+          },
+          function(err) {
+            if(err) return next(err);
+          });
         break;
       case 4:
-
+        Pebble.timelineSubscribe('event',
+          function() {
+            // Success
+            Pebble.sendAppMessage({ text: 'Updated timeline subscription' });
+          },
+          function(err) {
+            if(err) return next(err);
+          });
         break;
       case 5:
-
+        Pebble.timelineSubscribe('food',
+          function() {
+            // Success
+            Pebble.sendAppMessage({ text: 'Updated timeline subscription' });
+          },
+          function(err) {
+            if(err) return next(err);
+          });
         break;
       case 6:
-
+        Pebble.timelineSubscribe('reminder',
+          function() {
+            // Success
+            Pebble.sendAppMessage({ text: 'Updated timeline subscription' });
+          },
+          function(err) {
+            if(err) return next(err);
+          });
         break;
     }
   }
-}); 
+});
