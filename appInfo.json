@@ -12,13 +12,14 @@
     "watchface": false
   },
   "appKeys": {
-    "ready": 0,
-    "action": 1,
-    "quit": 2,
-    "TOPIC_TALKS": 3,
-    "TOPIC_EVENT": 4,
-    "TOPIC_FOOD": 5,
-    "TOPIC_REMINDER": 6
+    "SUB_TOPIC_TALKS": 0,
+    "SUB_TOPIC_EVENT": 1,
+    "SUB_TOPIC_FOOD": 2,
+    "SUB_TOPIC_REMINDER": 3,
+    "UNSUB_TOPIC_TALKS": 4,
+    "UNSUB_TOPIC_EVENT": 5,
+    "UNSUB_TOPIC_FOOD": 6,
+    "UNSUB_TOPIC_REMINDER": 7
   },
   "resources": {
     "media": []
