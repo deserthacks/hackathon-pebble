@@ -4,10 +4,10 @@
 #define NUM_FIRST_MENU_ITEMS 3
 #define NUM_SECOND_MENU_ITEMS 3
 
-#define TOPIC_FOOD_DEFAULT false
-#define TOPIC_EVENTS_DEFAULT false
-#define TOPIC_TALKS_DEFAULT false
-#define TOPIC_REMINDERS_DEFAULT false
+#define TOPIC_FOOD_DEFAULT true
+#define TOPIC_EVENTS_DEFAULT true
+#define TOPIC_TALKS_DEFAULT true
+#define TOPIC_REMINDERS_DEFAULT true
 
 static Window *s_main_window;
 static Window *topic_window;
@@ -136,8 +136,12 @@ static void topics_menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_i
       // Food
       APP_LOG(APP_LOG_LEVEL_DEBUG, "FOOD");
       if(topic_food) {
+        topic_food = !topic_food;
+        APP_LOG(APP_LOG_LEVEL_INFO, "Subscribed to FOOD");
         send_to_phone(UNSUB_TOPIC_FOOD, 0);
       } else {
+        topic_food = !topic_food;
+        APP_LOG(APP_LOG_LEVEL_INFO, "Unsubscribed to FOOD");
         send_to_phone(SUB_TOPIC_FOOD, 1);
       }
       layer_mark_dirty(menu_layer_get_layer(menu_layer));
@@ -146,8 +150,12 @@ static void topics_menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_i
       // Events
       APP_LOG(APP_LOG_LEVEL_DEBUG, "EVENTS");
       if(topic_events) {
+        topic_events = !topic_events;
+        APP_LOG(APP_LOG_LEVEL_INFO, "Subscribed to EVENTS");
         send_to_phone(UNSUB_TOPIC_EVENTS, 0);
       } else {
+        topic_events = !topic_events;
+        APP_LOG(APP_LOG_LEVEL_INFO, "Unsubscribed to EVENTS");
         send_to_phone(SUB_TOPIC_EVENTS, 1);
       }
       layer_mark_dirty(menu_layer_get_layer(menu_layer));
@@ -156,8 +164,12 @@ static void topics_menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_i
       // Tech talks
       APP_LOG(APP_LOG_LEVEL_DEBUG, "TALKS");
       if(topic_talks) {
+        topic_talks = !topic_talks;
+        APP_LOG(APP_LOG_LEVEL_INFO, "Subscribed to TALKS");
         send_to_phone(UNSUB_TOPIC_TALKS, 0);
       } else {
+        topic_talks = !topic_talks;
+        APP_LOG(APP_LOG_LEVEL_INFO, "Subscribed to TALKS");
         send_to_phone(SUB_TOPIC_TALKS, 1);
       }
       layer_mark_dirty(menu_layer_get_layer(menu_layer));
@@ -165,8 +177,12 @@ static void topics_menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_i
     case 3:
       // Reminders
       if(topic_reminders) {
+        topic_reminders = !topic_reminders;
+        APP_LOG(APP_LOG_LEVEL_INFO, "Subscribed to REMINDERS");
         send_to_phone(UNSUB_TOPIC_REMINDERS, 0);
       } else {
+        topic_reminders = !topic_reminders;
+        APP_LOG(APP_LOG_LEVEL_INFO, "Subscribed to REMINDERS");
         send_to_phone(SUB_TOPIC_REMINDERS, 1);
       }
       layer_mark_dirty(menu_layer_get_layer(menu_layer));
